@@ -1,0 +1,12 @@
+Shooter/.vs
+Shooter/Binaries/
+Shooter/Intermediate/
+Shooter/Saved/
+Shooter/DerivedDataCache
+Shooter/Shooter.sln
+Shooter.sln
+.vs/Shooter/v17/.suo
+Binaries/Win64/ShooterEditor.target
+Binaries/
+Intermediate/
+Saved/
