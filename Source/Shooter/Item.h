@@ -52,15 +52,18 @@ protected:
 		bool bFromSweep,
 		const FHitResult& SweepResult);
 	
-	//当结束重叠时调用
+	//Called when End Overlapping AreaSphere
 	UFUNCTION()
 	void ONSphereEndOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
 
-	/** 根据ActiveStars 数组稀有度设置 bool  */
+	/** Sets the ActiveStars array of bools based on rarity  */
 	void SetActiveStars();
+	
+	/** Sets properties of the Item's components based on State*/
+	void SetItemProperties(EItemState State);
 
 public:	
 	// Called every frame
@@ -108,6 +111,7 @@ public:
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
 	FORCEINLINE UBoxComponent* GetCollisionBox() const { return CollisionBox; }
 	FORCEINLINE EItemState GetItemState() const { return ItemState; }
-	FORCEINLINE void SetItemState(EItemState state) { ItemState = state; }
+	void SetItemState(EItemState state);
+	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; }
 
 };
