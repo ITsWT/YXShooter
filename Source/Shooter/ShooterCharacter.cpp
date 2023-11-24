@@ -453,15 +453,15 @@ void AShooterCharacter::TraceForItems()
 		TraceUnderCrosshairs(ItemTraceResult, HitLocation);
 		if (ItemTraceResult.bBlockingHit)
 		{
-			AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
-			if (HitItem && HitItem->GetPickupWidget())
+			TraceHitItem = Cast<AItem>(ItemTraceResult.Actor);
+			if (TraceHitItem && TraceHitItem->GetPickupWidget())
 			{
-				HitItem->GetPickupWidget()->SetVisibility(true);
+				TraceHitItem->GetPickupWidget()->SetVisibility(true);
 			}
 			//上一帧检测到的AItem
 			if(TraceHitItemLastFrame)
 			{
-				if (HitItem != TraceHitItemLastFrame)
+				if (TraceHitItem != TraceHitItemLastFrame)
 				{
 					//检测到这一帧的HitItem和上一帧的不同
 					//或者HitItem是空的
@@ -469,13 +469,14 @@ void AShooterCharacter::TraceForItems()
 				}
 			}
 			//将物体储存到 TraceHitItemLastFrame 中
-			TraceHitItemLastFrame = HitItem;
+			TraceHitItemLastFrame = TraceHitItem;
 		}
 	}
 	else if (TraceHitItemLastFrame)
 	{
 		//不再重叠的物体上一帧应该关闭显示ui
 		TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+		
 	}
 }
 
@@ -515,16 +516,30 @@ void AShooterCharacter::DropWeapon()
 		EquippedWeapon->GetItemMesh()->DetachFromComponent(DetachmentTransformRulers);
 
 		EquippedWeapon->SetItemState(EItemState::EIS_Falling);
+		EquippedWeapon->ThrowWeapon();
 	}
 }
 
 void AShooterCharacter::SelectButtonPressed()
 {
-	DropWeapon();
+	if (TraceHitItem)
+	{
+		auto TranceHitWeapon = Cast<AWeapon>(TraceHitItem);
+		SwapWeapon(TranceHitWeapon);
+	}
+	
 }
 
 void AShooterCharacter::SelectButtonReleased()
 {
+}
+
+void AShooterCharacter::SwapWeapon(AWeapon* WeaponToSwap)
+{
+	DropWeapon();
+	EquipWeapon(WeaponToSwap);
+	TraceHitItem = nullptr;
+	TraceHitItemLastFrame = nullptr;
 }
 
 // Called every frame

@@ -94,8 +94,10 @@ protected:
 	void DropWeapon();
 
 	void SelectButtonPressed();
-
 	void SelectButtonReleased();
+
+	/** Drops currently equipped Weapon and Equips TraceHitItem */
+	void SwapWeapon(AWeapon* WeaponToSwap);
 
 public:	
 	// Called every frame
@@ -240,18 +242,22 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"));
 	class AItem* TraceHitItemLastFrame;
 
-	/** 当前装备的武器*/
+	/** Currently equipment Weapon*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	AWeapon* EquippedWeapon;
 
-	/** 在当前蓝图中设置默认武器类*/
+	/** Set this in Blueprint for the default Weapon class */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> DefaultWeaponClass;
+	
+	/** The item currently hit by our trace int TraceForItems(could be null) */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	AItem* TraceHitItem;
 
 public:
-	/**FORCEINLINE 内联函数（代码执行中跳跃更少，节省性能）; 获取到弹簧臂组件 */
+	/**FORCEINLINE 内联函数（代码执行中跳跃更少，节省性能）; Return CameraBoom subobject */
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	//获取相机组件
+	//Return FollowCamera Subobject
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	FORCEINLINE bool GetAiming() const { return bAiming; }
