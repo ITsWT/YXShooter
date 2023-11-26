@@ -47,15 +47,15 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//Òþ²Øui
+	//ï¿½ï¿½ï¿½ï¿½ui
 	if (PickupWidget)
 	{
 		PickupWidget->SetVisibility(false);
 	}
-	//Í¨¹ýÏ¡ÓÐ¶ÈÉèÖÃÐÇÐÇ¸öÊý
+	//Í¨ï¿½ï¿½Ï¡ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½
 	SetActiveStars();
 
-	//AreaSphereÖØµþÊ±
+	//AreaSphereï¿½Øµï¿½Ê±
 	AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnSphereOverlap);
 	AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::ONSphereEndOverlap);
 
@@ -89,7 +89,7 @@ void AItem::ONSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
 void AItem::SetActiveStars()
 {
-	//0²»ÓÃ
+	//0ï¿½ï¿½ï¿½ï¿½
 	for (int32 i = 0; i <= 5; i++)
 	{
 		ActiveStars.Add(false);

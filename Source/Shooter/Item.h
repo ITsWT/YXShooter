@@ -43,7 +43,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//µ±¿ªÊ¼ÖØµþÊ±µ÷ÓÃ
+	//ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Øµï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
@@ -77,27 +77,27 @@ public:
 
 private:
 
-	/** ×ÔÉíµÄ¹Ç÷ÀÍø¸ñÌå*/
+	/** ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* ItemMesh;
 
-	/** Ïß¼£Óë¿òÅö×²ÒÔÏÔÊ¾ HUD Ð¡×é¼þ*/
+	/** ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½Ê¾ HUD Ð¡ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"));
 	class UBoxComponent* CollisionBox;
 
-	/** µ±Íæ¼Ò¿´ÏòÊ±Õ¹Ê¾UI*/
+	/** ï¿½ï¿½ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½Ê±Õ¹Ê¾UI*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* PickupWidget;
 
-	/** ¿ÉÊ°È¡¼ì²â*/
+	/** ï¿½ï¿½Ê°È¡ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class USphereComponent* AreaSphere;
 
-	/** ÎïÌåUIÉÏÕ¹Ê¾µÄÃû×Ö*/
+	/** ï¿½ï¿½ï¿½ï¿½UIï¿½ï¿½Õ¹Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	FString ItemName;
 
-	/** ÎïÌåUIÉÏÕ¹Ê¾µÄÊýÁ¿*/
+	/** ï¿½ï¿½ï¿½ï¿½UIï¿½ï¿½Õ¹Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	int32 ItemCount;
 

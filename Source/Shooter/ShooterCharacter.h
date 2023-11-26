@@ -6,6 +6,23 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class EAmmoType :uint8
+{
+	EAT_9mm UMETA(DisplayName = "9mm"),
+	EAT_AR UMETA(DisplayName = "AssaultRufle"),
+
+	EAT_NAX UMETA(DistplayName = "DefaultMAX")
+};
+UENUM(BlueprintType)
+enum class ECombatState : uint8
+{
+	ECS_Unoccupied UMETA(DisplayName = "9mm"),
+	ECS_FireTimerInProgress UMETA(DisplayName="FireTimerInProgress"),
+	ECS_Reloading UMETA(DisplayName="Reloading"),
+	ECS_NAX UMETA(DisplayName = "DEfaultMAX")
+};
+
 UCLASS()
 class SHOOTER_API AShooterCharacter : public ACharacter
 {
@@ -19,48 +36,48 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//ÊäÈëÇ°½øºóÍËÊ±µ÷ÓÃ
+	//ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 	void MoveFoward(float value);
 
-	//ÊäÈë×óÓÒÊ±µ÷ÓÃ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 	void MoveRight(float value);
 
 	/**
-	*µ÷ÓÃ×ªÏòÊäÈëÒÔ¸ø¶¨µÄËÙÂÊ×ª¶¯
-	* @param Rate ÕâÊÇÒ»¸ö¹éÒ»»¯µÄËÙÂÊ£¬1.0±íÊ¾100%
+	*ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
+	* @param Rate ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½1.0ï¿½ï¿½Ê¾100%
 	*/
 	void TurnAtRate(float Rate);
 
 	/**
-	*µ÷ÓÃÌ§Í·ÊäÈëÒÔ¸ø¶¨µÄËÙÂÊ×ª¶¯
-	* @param Rate ÕâÊÇÒ»¸ö¹éÒ»»¯µÄËÙÂÊ£¬1.0±íÊ¾100%
+	*ï¿½ï¿½ï¿½ï¿½Ì§Í·ï¿½ï¿½ï¿½ï¿½ï¿½Ô¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
+	* @param Rate ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½1.0ï¿½ï¿½Ê¾100%
 	*/
 	void LookUpAtRate(float Rate);
 
 	/**
-	*Í¨¹ýÊó±êXÖáÐý×ª¿ØÖÆÆ÷
-	* @param value Êó±êÊäÈëµÄ²ÎÊýÖµ
+	*Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	* @param value ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½Öµ
 	*/
 	void Turn(float value);
 
 	/**
-	*Í¨¹ýÊó±êYÖáÐý×ª¿ØÖÆÆ÷
-	* @param value Êó±êÊäÈëµÄ²ÎÊýÖµ
+	*Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	* @param value ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½Öµ
 	*/
 	void LookUp(float value);
 
-	//¿ª»ð¼ü°´ÏÂÊ±µ÷ÓÃ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 	void FireWeapon();
 
 	bool GetBeamEndLocation(const FVector& MuzzleSocketLocation,FVector& OutBeamLocation);
 
-	/** Í¨¹ý°´Å¥ÉèÖÃbAmingÎªÕæ»ò¼Ù*/
+	/** Í¨ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½bAmingÎªï¿½ï¿½ï¿½ï¿½*/
 	void AimingButtonPressed();
 	void AimingButtonReleased();
 
 	void CameraInterpZoom(float DeltaTime);
 
-	//Ãé×¼Ê±ÉèÖÃ»ù´¡Ðý×ªËÙÂÊºÍ»ù´¡Ì§Í·ËÙÂÊ
+	//ï¿½ï¿½×¼Ê±ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ÊºÍ»ï¿½ï¿½ï¿½Ì§Í·ï¿½ï¿½ï¿½ï¿½
 	void SetLookRate();
 
 	void CalculateCrosshairSpread(float DeltaTime);
@@ -99,6 +116,18 @@ protected:
 	/** Drops currently equipped Weapon and Equips TraceHitItem */
 	void SwapWeapon(AWeapon* WeaponToSwap);
 
+	/** Initialize the Ammo Map with ammo values */
+	void InitializeAmmoMap();
+
+	/** Check to make sure out weapon has ammo */
+	bool WeaponHasAmmo();
+
+	void PlayFireSound();
+
+	void SendBullet();
+
+	void PlayGunFireMontage();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -109,73 +138,73 @@ public:
 
 private:
 
-	/**ÓÃclass¿ÉÃâÈ¥include; µ¯»É±Û×é¼þ£¬ÔÚ½ºÄÒÌåºóÃæ */
+	/**ï¿½ï¿½classï¿½ï¿½ï¿½ï¿½È¥include; ï¿½ï¿½ï¿½É±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 	
-	/**Ïà»ú×é¼þ£¬¸úËæ×Åµ¯»É±Û*/
+	/**ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åµï¿½ï¿½É±ï¿½*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	//»ù´¡×ªÏòËÙÂÊ£¬ÒÔ ¶È/Ãë Îªµ¥Î»¡£ÆäËûËõ·Å¿ÉÄÜ»áÓ°Ïì×îÖÕ½á¹û
+	//ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ ï¿½ï¿½/ï¿½ï¿½ Îªï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½Ü»ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseTurnRate;
 
-	//»ù´¡Ì§Í·ËÙÂÊ£¬ÒÔ ¶È/Ãë Îªµ¥Î»¡£ÆäËûËõ·Å¿ÉÄÜ»áÓ°Ïì×îÖÕ½á¹û
+	//ï¿½ï¿½ï¿½ï¿½Ì§Í·ï¿½ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ ï¿½ï¿½/ï¿½ï¿½ Îªï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½Ü»ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float BaseLookUpRate;
 
-	/** ·ÅËÉ×´Ì¬ÏÂµÄÐý×ªËÙÂÊ*/
+	/** ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Âµï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float HipTurnRate;
 
-	/** ·ÅËÉ×´Ì¬ÏÂµÄÌ§Í·ËÙÂÊ*/
+	/** ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Âµï¿½Ì§Í·ï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float HipLookUpRate;
 
-	/** Ãé×¼×´Ì¬ÏÂµÄÐý×ªËÙÂÊ*/
+	/** ï¿½ï¿½×¼×´Ì¬ï¿½Âµï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float AimingTurnRate;
 
-	/** Ãé×¼×´Ì¬ÏÂµÄÐý×ªËÙÂÊ*/
+	/** ï¿½ï¿½×¼×´Ì¬ï¿½Âµï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	float AimingLookUpRate;
 	
-	//²»Ãé×¼ÏÂÊ±Êó±êÍâ¹ÛÁéÃô¶ÈÐý×ªÂÊµÄ±ÈÀýÒò×Ó
+	//ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ÊµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseHipTurnRate;
 
-	//²»Ãé×¼ÏÂÊ±Êó±êÍâ¹ÛÁéÃô¶ÈÌ§Í·ÂÊµÄ±ÈÀýÒò×Ó
+	//ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì§Í·ï¿½ÊµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseHipLookUpRate;
 	
-	//Ãé×¼ÏÂÊ±Êó±êÍâ¹ÛÁéÃô¶ÈÐý×ªÂÊµÄ±ÈÀýÒò×Ó
+	//ï¿½ï¿½×¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ÊµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseAimingTurnRate;
 
-	//Ãé×¼ÏÂÊ±Êó±êÍâ¹ÛÁéÃô¶ÈÌ§Í·ÂÊµÄ±ÈÀýÒò×Ó
+	//ï¿½ï¿½×¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì§Í·ï¿½ÊµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseAimingLookUpRate;
 
 
 	
-	/** Ëæ»úÇ¹Éù*/
+	/** ï¿½ï¿½ï¿½Ç¹ï¿½ï¿½*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class USoundCue* FireSound;
 
-	/** ÔÚBarralSocket´¦Éú³ÉÇ¹¿ÚÌØÐ§*/
+	/** ï¿½ï¿½BarralSocketï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¹ï¿½ï¿½ï¿½ï¿½Ð§*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class UParticleSystem* MuzzleFlash;
 
-	/** ¿ª»ðÃÉÌ«Ææ*/
+	/** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class UAnimMontage* HipFireMontage;
 
-	/** »÷ÖÐÌØÐ§*/
+	/** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class UParticleSystem* ImpactParticles;
 
-	/** ×Óµ¯ÍÏÎ²ÌØÐ§*/
+	/** ï¿½Óµï¿½ï¿½ï¿½Î²ï¿½ï¿½Ð§*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	UParticleSystem* BeamParticles;
 
@@ -183,36 +212,36 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	bool bAiming;
 
-	/** Ä¬ÈÏÏà»úÊÓÒ°Öµ*/
+	/** Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò°Öµ*/
 	float CameraDefaultFOV;
 
-	/** Ãé×¼ÊÇµÄÊÓÒ°Öµ*/
+	/** ï¿½ï¿½×¼ï¿½Çµï¿½ï¿½ï¿½Ò°Öµ*/
 	float CameraZoomedFOV;
 
-	/** µ±Ç°Ö¡µÄÏà»úÊÓÒ°Öµ*/
+	/** ï¿½ï¿½Ç°Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò°Öµ*/
 	float CameraCurrentFOV;
 
-	/** ÇÐ»»¾µÍ·µÄ²åÖµËÙ¶È*/
+	/** ï¿½Ð»ï¿½ï¿½ï¿½Í·ï¿½Ä²ï¿½Öµï¿½Ù¶ï¿½*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	float ZoomInterpSpeed;
 
-	/** È·¶¨Ê®×Ö×¼ÏßµÄÀ©É¢ */
+	/** È·ï¿½ï¿½Ê®ï¿½ï¿½×¼ï¿½ßµï¿½ï¿½ï¿½É¢ */
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float CrosshairSpreadMultiplier;
 
-	/** Ê®×Ö×¼ÏßÕ¹¿ªµÄËÙ¶È·ÖÁ¿*/
+	/** Ê®ï¿½ï¿½×¼ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È·ï¿½ï¿½ï¿½*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float CrosshairVelocityFactor;
 
-	/** ¿ÕÖÐÊ®×Ö×¼ÏßÕ¹¿ªµÄËÙ¶È·ÖÁ¿*/
+	/** ï¿½ï¿½ï¿½ï¿½Ê®ï¿½ï¿½×¼ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È·ï¿½ï¿½ï¿½*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float CrosshairInAirFactor;
 
-	/** Ãé×¼Ê±Ê®×Ö×¼ÏßÕ¹¿ªµÄËÙ¶È·ÖÁ¿*/
+	/** ï¿½ï¿½×¼Ê±Ê®ï¿½ï¿½×¼ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È·ï¿½ï¿½ï¿½*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float CrosshairAimingFactor;
 
-	/** ÓÃÓÚÊ®×Ö×¼ÏßÕ¹¿ªµÄÉä»÷×é¼þ*/
+	/** ï¿½ï¿½ï¿½ï¿½Ê®ï¿½ï¿½×¼ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category = Combat, meta = (AllowPrivateAccess = "true"))
 	float CrosshairShootingFactor;
 
@@ -220,25 +249,25 @@ private:
 	bool bFiringBullet;
 	FTimerHandle CrosshairShootTimer;
 
-	/** ×ó¼ü°´ÏÂ»òÕßÊÖ±úÓÒ±ß´¥·¢Æ÷°´ÏÂ*/
+	/** ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â»ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½Ò±ß´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	bool bFireButtonPressed;
 
-	/** ÄÜ¿ª»ðÊ±ÎªÕæ£¬µÈ´ý¿ª»ðÊ±Îª¼Ù*/
+	/** ï¿½Ü¿ï¿½ï¿½ï¿½Ê±Îªï¿½æ£¬ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Îªï¿½ï¿½*/
 	bool bShouldFire;
 
-	/** ×Ô¶¯¿ª»ðËÙÂÊ*/
+	/** ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	float AutomaticFireRate;
 
-	/** ÉèÖÃ¿ª»ð¼ä¸ô¼ÆÊ±Æ÷*/
+	/** ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½*/
 	FTimerHandle AutoFireTimer;
 
-	/** Ó¦¸Ã¼ì²âÊ±ÎªÕæ*/
+	/** Ó¦ï¿½Ã¼ï¿½ï¿½Ê±Îªï¿½ï¿½*/
 	bool bShoulTraceForItems;
 
-	/** ÖØµþÎïÌåµÄÊýÁ¿*/
+	/** ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	int8 OverlappedItemCount;
 
-	/** ÉÏÒ»Ö¡¼ì²âµ½µÄÎïÌå*/
+	/** ï¿½ï¿½Ò»Ö¡ï¿½ï¿½âµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"));
 	class AItem* TraceHitItemLastFrame;
 
@@ -262,8 +291,24 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
 	float CameraInterpElevation;
 
+	/** Map to keep track of ammo of the different ammo types */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int32> AmmoMap;
+
+	/** Starting amount of 9mm ammo */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+	int32 Starting9mmAmmo;
+
+	/** Starting amount of AR ammo */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Items, meta = (AllowPrivateAccess = "true"))
+	int32 StartingARAmmo;
+
+	/** Combat State, can only fire or reload if Unoccupied */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
+	ECombatState CombatState;
+
 public:
-	/**FORCEINLINE ÄÚÁªº¯Êý£¨´úÂëÖ´ÐÐÖÐÌøÔ¾¸üÉÙ£¬½ÚÊ¡ÐÔÄÜ£©; Return CameraBoom subobject */
+	/**FORCEINLINE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾ï¿½ï¿½ï¿½Ù£ï¿½ï¿½ï¿½Ê¡ï¿½ï¿½ï¿½Ü£ï¿½; Return CameraBoom subobject */
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	//Return FollowCamera Subobject
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
@@ -275,7 +320,7 @@ public:
 
 	FORCEINLINE int8 GetOverlappedItemCount() const { return OverlappedItemCount; }
 
-	/** ´ÓÖØµþÊÂ¼þ Ôö/¼õ ²¢ÇÒ¸üÐÂÊÇ·ñ¿ÉÒÔ¼ì²â*/
+	/** ï¿½ï¿½ï¿½Øµï¿½ï¿½Â¼ï¿½ ï¿½ï¿½/ï¿½ï¿½ ï¿½ï¿½ï¿½Ò¸ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½*/
 	void IncrementOverlappedItemCount(int8 Amount);
 
 	FVector GetCameraInterpLocation();
