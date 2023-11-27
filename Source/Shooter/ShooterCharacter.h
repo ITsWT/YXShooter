@@ -4,16 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AmmoType.h"
 #include "ShooterCharacter.generated.h"
 
-UENUM(BlueprintType)
-enum class EAmmoType :uint8
-{
-	EAT_9mm UMETA(DisplayName = "9mm"),
-	EAT_AR UMETA(DisplayName = "AssaultRufle"),
-
-	EAT_NAX UMETA(DistplayName = "DefaultMAX")
-};
 UENUM(BlueprintType)
 enum class ECombatState : uint8
 {
@@ -122,11 +115,17 @@ protected:
 	/** Check to make sure out weapon has ammo */
 	bool WeaponHasAmmo();
 
+	/** FireWeapon Functions */
 	void PlayFireSound();
-
 	void SendBullet();
-
 	void PlayGunFireMontage();
+	/** Bound to the R key and Gamepad Face Button left*/
+	void ReloadButtonPressed();
+	/** Handle Reloading of the weapon */
+	void ReloadWeapon();
+
+	/** Checks to see if we have ammo of the EquippedWeapon's ammo type*/
+	bool CarryingAmmo();
 
 public:	
 	// Called every frame
@@ -192,23 +191,23 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class USoundCue* FireSound;
 
-	/** ��BarralSocket������ǹ����Ч*/
+	/** Flash spawned at BarralSocket*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class UParticleSystem* MuzzleFlash;
 
-	/** ������̫��*/
+	/** Montage for firing the weapon*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class UAnimMontage* HipFireMontage;
 
-	/** ������Ч*/
+	/**Particles spawned upon bullet impact*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class UParticleSystem* ImpactParticles;
 
-	/** �ӵ���β��Ч*/
+	/**Smoke trail for bullets*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	UParticleSystem* BeamParticles;
 
-	/** */
+	/** True when Aiming */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	bool bAiming;
 
@@ -306,6 +305,13 @@ private:
 	/** Combat State, can only fire or reload if Unoccupied */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	ECombatState CombatState;
+
+	/** Montage for Reload animations */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
+	UAnimMontage* ReloadMontage;
+
+	UFUNCTION(BlueprintCallable)
+	void FinishReloading();
 
 public:
 	/**FORCEINLINE ��������������ִ������Ծ���٣���ʡ���ܣ�; Return CameraBoom subobject */
