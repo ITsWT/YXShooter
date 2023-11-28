@@ -24,23 +24,23 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	class AShooterCharacter* ShooterCharacter;
 
-	//½ÇÉ«ËÙ¶È
+	//ï¿½ï¿½É«ï¿½Ù¶ï¿½
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float Speed;
 
-	//½ÇÉ«ÊÇ·ñÔÚ¿ÕÖÐ
+	//ï¿½ï¿½É«ï¿½Ç·ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bIsInAir;
 
-	//½ÇÉ«ÊÇ·ñÔÚÒÆ¶¯
+	//ï¿½ï¿½É«ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bIsAccelerating;
 
-	//ÓÃÓÚÉ¨ÉäµÄÆ«º½Æ«º½
+	//ï¿½ï¿½ï¿½ï¿½É¨ï¿½ï¿½ï¿½Æ«ï¿½ï¿½Æ«ï¿½ï¿½
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float MovementOffsetYaw;
 	
-	//ÓÃÓÚÉ¨ÉäµÄÆ«º½Æ«º½£¬Í£ÏÂµÄÇ°¼¸Ö¡
+	//ï¿½ï¿½ï¿½ï¿½É¨ï¿½ï¿½ï¿½Æ«ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½Í£ï¿½Âµï¿½Ç°ï¿½ï¿½Ö¡
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float LastMovementOffsetYaw;
 	

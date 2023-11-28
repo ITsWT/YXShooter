@@ -15,15 +15,15 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 
 	if (ShooterCharacter)
 	{
-		//´Óvelocity»ñÈ¡½ÇÉ«µÄËÙ¶È
+		//ï¿½ï¿½velocityï¿½ï¿½È¡ï¿½ï¿½É«ï¿½ï¿½ï¿½Ù¶ï¿½
 		FVector Velocity{ ShooterCharacter->GetVelocity() };
 		Velocity.Z = 0;
 		Speed = Velocity.Size();
 
-		//ÈËÎïÊÇ·ñÔÚ¿ÕÖÐ
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½
 		bIsInAir = ShooterCharacter->GetCharacterMovement()->IsFalling();
 
-		//ÈËÎïÊÇ·ñÔÚÒÆ¶¯
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½
 		if (ShooterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0)
 		{
 			bIsAccelerating = true;

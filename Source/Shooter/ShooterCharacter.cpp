@@ -83,11 +83,14 @@ AShooterCharacter::AShooterCharacter() :
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 	
-	//���ý�ɫ�ƶ�
-	GetCharacterMovement()->bOrientRotationToMovement = false;//��ɫ������ķ������ƶ�...
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);//...�������ת�ٶ���
+	//Configure character movement
+	GetCharacterMovement()->bOrientRotationToMovement = false;//Character moves in the ...
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);//...at this rotation
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
+
+	//Crate Hand Scene Component
+	HandSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("HandSceneComp"));
 
 }
 
@@ -626,6 +629,29 @@ bool AShooterCharacter::CarryingAmmo()
 		return AmmoMap[AmmoType] > 0;
 	}
 	return false;
+}
+
+void AShooterCharacter::GrabClip()
+{
+	if (EquippedWeapon == nullptr) return ;
+	if (HandSceneComponent == nullptr) return ;
+
+	//Index for the clip bone on the Equipped Weapon
+	int32 ClipBoneIndex{ EquippedWeapon->GetItemMesh()->GetBoneIndex(EquippedWeapon->GetClipBoneName()) };
+	//Store the transform of the clip
+	ClipTransform = EquippedWeapon->GetItemMesh()->GetBoneTransform(ClipBoneIndex);
+
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepRelative, true);
+
+	HandSceneComponent->AttachToComponent(GetMesh(), AttachmentRules, FName(TEXT("hand_l"))); 
+	HandSceneComponent->SetWorldTransform(ClipTransform);
+
+	EquippedWeapon->SetMovingClip(true);
+}
+
+void AShooterCharacter::ReleaseClip()
+{
+	EquippedWeapon->SetMovingClip(false);
 }
 
 // Called every frame
