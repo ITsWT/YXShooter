@@ -219,13 +219,13 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	bool bAiming;
 
-	/** Ĭ�������Ұֵ*/
+	/** Default camera field of view valueֵ */
 	float CameraDefaultFOV;
 
-	/** ��׼�ǵ���Ұֵ*/
+	/** Field of view value for when zoomed in */
 	float CameraZoomedFOV;
 
-	/** ��ǰ֡�������Ұֵ*/
+	/** Current field of view this frame */
 	float CameraCurrentFOV;
 
 	/** �л���ͷ�Ĳ�ֵ�ٶ�*/
@@ -348,4 +348,8 @@ public:
 	FVector GetCameraInterpLocation();
 
 	void GetPickupItem(AItem* Item);
+
+	FORCEINLINE ECombatState GetCombatState() const { return CombatState; }
+
+
 };

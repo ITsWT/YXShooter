@@ -6,6 +6,17 @@
 #include "Animation/AnimInstance.h"
 #include "ShooterAnimInstance.generated.h"
 
+
+UENUM(BlueprintType)
+enum class EOffsetState : uint8
+{
+	EOS_Aiming UMETA(DisplayName = "Aiming"),
+	EOS_Hip UMETA(DisplayName = "Hip"),
+	EOS_Reloading UMETA(DisplayName = "Reloading"),
+	EOS_InAir UMETA(DisplayName = "InAir"),
+
+	EOS_MAX UMETA(DisplayName = "DefaultMAX")
+};
 /**
  * 
  */
@@ -64,4 +75,22 @@ private:
 	/**  */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"));
 	float RootYawOffset;
+
+	/** Rotation curve value this frame*/
+	float RotationCurve;
+
+	/** Rotation curve value last frame*/
+	float RotationCurveLastFrame;
+
+	/** the Pitch of the aim rotation,used for aim offset*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"));
+	float Pitch;
+
+	/** true when reloading,used to prevent aim offset while reloading */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"));
+	bool bReloading;
+
+	/** Offset state; used to determie which Aim offset to use */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn In Place", meta = (AllowPrivateAccess = "true"));
+	EOffsetState OffsetState;
 };
