@@ -13,8 +13,8 @@ UShooterAnimInstance::UShooterAnimInstance():
 	MovementOffsetYaw(0.f),
 	LastMovementOffsetYaw(0.f),
 	bAiming(false),
-	CharacterYaw(0.f),
-	CharacterYawLastframe(0.f),
+	TIPCharacterYaw(0.f),
+	TIPCharacterYawLastframe(0.f),
 	RootYawOffset(0.f),
 	Pitch(0.f),
 	bReloading(false),
@@ -86,6 +86,7 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		}
 	}
 	TurnInPlace();
+	Lean(DeltaTime);
 }
 
 void UShooterAnimInstance::NativeInitializeAnimation()
@@ -105,16 +106,16 @@ void UShooterAnimInstance::TurnInPlace()
 	{
 		//Don't want to turn in place,Character is moving
 		RootYawOffset = 0.f;
-		CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
-		CharacterYawLastframe = CharacterYaw;
+		TIPCharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+		TIPCharacterYawLastframe = TIPCharacterYaw;
 		RotationCurveLastFrame = 0.f;
 		RotationCurve = 0.f;
 	}
 	else
 	{
-		CharacterYawLastframe = CharacterYaw;
-		CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
-		const float YawDelta{ CharacterYaw - CharacterYawLastframe };
+		TIPCharacterYawLastframe = TIPCharacterYaw;
+		TIPCharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+		const float YawDelta{ TIPCharacterYaw - TIPCharacterYawLastframe };
 		
 		//Root Yaw Offset,update and clamped to [-180,180]
 		RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - YawDelta);
@@ -140,4 +141,19 @@ void UShooterAnimInstance::TurnInPlace()
 		if (GEngine) GEngine->AddOnScreenDebugMessage(1, -1, FColor::Blue, FString::Printf(TEXT("RootYawOffset:%f"), RootYawOffset));
 		
 	}
+}
+
+void UShooterAnimInstance::Lean(float DeltaTime)
+{
+	if (ShooterCharacter == nullptr) return;
+	CharacterYawLastframe = CharacterYaw;
+	CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+	
+	const float Target{ (CharacterYaw - CharacterYawLastframe) / DeltaTime };
+
+	const float Interp{ FMath::FInterpTo(YawDelta,Target,DeltaTime,6.f) };
+
+	YawDelta = FMath::Clamp(Interp, -90.f, 90.f);
+
+	if (GEngine) GEngine->AddOnScreenDebugMessage(2, -1, FColor::Cyan, FString::Printf(TEXT("YawDelta:%f")));
 }
