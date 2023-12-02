@@ -13,12 +13,17 @@ UShooterAnimInstance::UShooterAnimInstance():
 	MovementOffsetYaw(0.f),
 	LastMovementOffsetYaw(0.f),
 	bAiming(false),
+	CharacterRotation(FRotator(0.f)),
+	CharacterRotationLastframe(FRotator(0.f)),
 	TIPCharacterYaw(0.f),
 	TIPCharacterYawLastframe(0.f),
+	YawDelta(0.f),
 	RootYawOffset(0.f),
 	Pitch(0.f),
 	bReloading(false),
-	OffsetState(EOffsetState::EOS_Hip)
+	OffsetState(EOffsetState::EOS_Hip),
+	RecoilWeight(1.f),
+	bTurningInplace(false)
 {
 
 }
@@ -32,6 +37,7 @@ void UShooterAnimInstance::UpdateAnimationProperties(float DeltaTime)
 
 	if (ShooterCharacter)
 	{
+		bCrouching = ShooterCharacter->GetCrouching();
 		bReloading = ShooterCharacter->GetCombatState() == ECombatState::ECS_Reloading;
 
 		//Get the lateral speed of the character form velocity
@@ -115,15 +121,16 @@ void UShooterAnimInstance::TurnInPlace()
 	{
 		TIPCharacterYawLastframe = TIPCharacterYaw;
 		TIPCharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
-		const float YawDelta{ TIPCharacterYaw - TIPCharacterYawLastframe };
+		const float TIPYawDelta{ TIPCharacterYaw - TIPCharacterYawLastframe };
 		
 		//Root Yaw Offset,update and clamped to [-180,180]
-		RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - YawDelta);
+		RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - TIPYawDelta);
 
 		//1.0 if turning,0.0 if not
 		const float Turning{ GetCurveValue(TEXT("Turning")) };
 		if (Turning > 0)
 		{
+			bTurningInplace = true;
 			RotationCurveLastFrame = RotationCurve;
 			RotationCurve = GetCurveValue(TEXT("Rotation"));
 			const float DeltaRotation{ RotationCurve - RotationCurveLastFrame };
@@ -138,22 +145,64 @@ void UShooterAnimInstance::TurnInPlace()
 				RootYawOffset > 0 ? RootYawOffset -= YawExcess : RootYawOffset += YawExcess;
 			}
 		}
-		if (GEngine) GEngine->AddOnScreenDebugMessage(1, -1, FColor::Blue, FString::Printf(TEXT("RootYawOffset:%f"), RootYawOffset));
+		else
+		{
+			bTurningInplace = false;
+		}
 		
+	}
+
+	// Set the Recoil Weight
+	if (bTurningInplace)
+	{
+		if (bReloading)
+		{
+			RecoilWeight = 1.f;
+		}
+		else
+		{
+			RecoilWeight = 0.f;
+		}
+	}
+	else //not turning in place
+	{
+		if (bCrouching)
+		{
+			if (bReloading)
+			{
+				RecoilWeight = 1.f;
+			}
+			else
+			{
+				RecoilWeight = 0.1f;
+			}
+		}
+		else
+		{
+			if (bAiming || bReloading)
+			{
+				RecoilWeight = 0.7f;
+			}
+			else
+			{
+				RecoilWeight = 0.5f;
+			}
+		}
 	}
 }
 
 void UShooterAnimInstance::Lean(float DeltaTime)
 {
 	if (ShooterCharacter == nullptr) return;
-	CharacterYawLastframe = CharacterYaw;
-	CharacterYaw = ShooterCharacter->GetActorRotation().Yaw;
+	CharacterRotationLastframe = CharacterRotation;
+	CharacterRotation = ShooterCharacter->GetActorRotation();
+
+	const FRotator Delta{ UKismetMathLibrary::NormalizedDeltaRotator(CharacterRotation,CharacterRotationLastframe) };
 	
-	const float Target{ (CharacterYaw - CharacterYawLastframe) / DeltaTime };
+	const float Target{ Delta.Yaw / DeltaTime };
 
 	const float Interp{ FMath::FInterpTo(YawDelta,Target,DeltaTime,6.f) };
 
 	YawDelta = FMath::Clamp(Interp, -90.f, 90.f);
 
-	if (GEngine) GEngine->AddOnScreenDebugMessage(2, -1, FColor::Cyan, FString::Printf(TEXT("YawDelta:%f")));
 }

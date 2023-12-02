@@ -135,6 +135,13 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void ReleaseClip();
 
+	void CrouchButtonPressed();
+
+	virtual void Jump() override;
+
+	/** Interps capsule half height when crouching/standing */
+	void InterpCapsuleHeight(float DeltaTime);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -220,15 +227,17 @@ private:
 	bool bAiming;
 
 	/** Default camera field of view valueֵ */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	float CameraDefaultFOV;
 
 	/** Field of view value for when zoomed in */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	float CameraZoomedFOV;
 
 	/** Current field of view this frame */
 	float CameraCurrentFOV;
 
-	/** �л���ͷ�Ĳ�ֵ�ٶ�*/
+	/** Interp speed for zooming when aiming */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	float ZoomInterpSpeed;
 
@@ -329,8 +338,39 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	USceneComponent* HandSceneComponent;
 
+	/** true when crouching */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"));
+	bool bCrouching;
+
+	/** Regular movement speed */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"));
+	float BaseMovementSpeed;
+
+	/** Crouch movement speed */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"));
+	float CrouchMoveSpeed;
+
+	/** Current half height of the capsule */
+	float CurrentCapsuleHalfHeight;
+
+	/** Half height of the capsule when not crouching */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=Movement, meta = (AllowPrivateAccess = "true"));
+	float StandingCapsuleHalfHeight;
+
+	/** Half height of the capsule when crouching */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=Movement, meta = (AllowPrivateAccess = "true"));
+	float CrouchingCapsuleHalfHeight;
+
+	/** Ground friction while not crouching */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=Movement, meta = (AllowPrivateAccess = "true"));
+	float BaseGroundFriction;
+
+	/** Ground friction while crouching */
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=Movement, meta = (AllowPrivateAccess = "true"));
+	float CrouchingGroundFriction;
+
 public:
-	/**FORCEINLINE ��������������ִ������Ծ���٣���ʡ���ܣ�; Return CameraBoom subobject */
+	/** Return CameraBoom Subobject */
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	//Return FollowCamera Subobject
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
@@ -350,6 +390,8 @@ public:
 	void GetPickupItem(AItem* Item);
 
 	FORCEINLINE ECombatState GetCombatState() const { return CombatState; }
+
+	FORCEINLINE bool GetCrouching() const { return bCrouching; }
 
 
 };

@@ -99,12 +99,24 @@ private:
 	EOffsetState OffsetState;
 
 	/** Character Yaw this frame */
-	float CharacterYaw;
+	FRotator CharacterRotation;
 
 	/** Character Yaw last frame */
-	float CharacterYawLastframe;
+	FRotator CharacterRotationLastframe;
 
 	/** Yaw delta used for leaning in the running BlendSpace */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Lean, meta = (AllowPrivateAccess = "true"));
 	float YawDelta;
+
+	/** True when Crouching */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Crouch, meta = (AllowPrivateAccess = "true"));
+	bool bCrouching;
+
+	/** Change the recoil weight based on turning in place and aiming */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Crouch, meta = (AllowPrivateAccess = "true"));
+	float RecoilWeight;
+
+	/** Turn when turning in place */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Crouch, meta = (AllowPrivateAccess = "true"));
+	bool bTurningInplace;
 };
