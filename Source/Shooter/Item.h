@@ -43,7 +43,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	//����ʼ�ص�ʱ����
+	//Call when overlapping AreaSphere
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 		AActor* OtherActor,
@@ -63,7 +63,7 @@ protected:
 	void SetActiveStars();
 	
 	/** Sets properties of the Item's components based on State*/
-	void SetItemProperties(EItemState State);
+	virtual void SetItemProperties(EItemState State);
 
 	/** Called when items ItemInterpTimer is finished */
 	void FinishInterping();
@@ -77,15 +77,15 @@ public:
 
 private:
 
-	/** ����Ĺ���������*/
+	/** Item mesh */
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* ItemMesh;
 
-	/** �߼������ײ����ʾ HUD С���*/
+	/** Line trace collides with box to show HUD widgets */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"));
 	class UBoxComponent* CollisionBox;
 
-	/** ����ҿ���ʱչʾUI*/
+	/** Popup widget for when the player looks at the item */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Properties", meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* PickupWidget;
 
@@ -166,6 +166,7 @@ public:
 	FORCEINLINE USkeletalMeshComponent* GetItemMesh() const { return ItemMesh; }
 	FORCEINLINE USoundCue* GetPickupSound() const { return PickupSound; }
 	FORCEINLINE USoundCue* GetEquipSound() const { return EquipSound; }
+	FORCEINLINE int32 GetItemCount() const { return ItemCount; }
 
 	/** Called from the AShooterCharacter class */
 	void StartItemCurve(AShooterCharacter* Char);

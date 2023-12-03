@@ -16,6 +16,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Ammo.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter() :
@@ -68,7 +69,8 @@ AShooterCharacter::AShooterCharacter() :
 	StandingCapsuleHalfHeight(88.f),
 	CrouchingCapsuleHalfHeight(44.f),
 	BaseGroundFriction(2.f),
-	CrouchingGroundFriction(100.f)
+	CrouchingGroundFriction(100.f),
+	bAimingButtonPressed(false)
 
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -243,15 +245,20 @@ bool AShooterCharacter::GetBeamEndLocation(
 
 void AShooterCharacter::AimingButtonPressed()
 {
-	bAiming = true;
+	bAimingButtonPressed = true;
+	if (CombatState != ECombatState::ECS_Reloading)
+	{
+		Aim();
+	}
 }
 
 void AShooterCharacter::AimingButtonReleased()
 {
-	bAiming = false;
+	bAimingButtonPressed = false;
+	StopAiming();
 }
 
-/**��׼*/
+/**��׼*/ 
 void AShooterCharacter::CameraInterpZoom(float DeltaTime)
 {
 	if (bAiming)
@@ -518,11 +525,6 @@ void AShooterCharacter::SelectButtonPressed()
 	if (TraceHitItem)
 	{
 		TraceHitItem->StartItemCurve(this);
-		
-		if (TraceHitItem->GetPickupSound())
-		{
-			UGameplayStatics::PlaySound2D(this, TraceHitItem->GetPickupSound());
-		}
 	}
 	
 }
@@ -619,11 +621,17 @@ void AShooterCharacter::ReloadButtonPressed()
 void AShooterCharacter::ReloadWeapon()
 {
 	if (CombatState != ECombatState::ECS_Unoccupied) return;
+
 	if (EquippedWeapon == nullptr) return;
 
 	//Do we have ammo of the correct type?
 	if (CarryingAmmo() && !EquippedWeapon->ClipIsFull())
 	{
+		if (bAiming)
+		{
+			StopAiming();
+		}
+
 		CombatState = ECombatState::ECS_Reloading;
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance && ReloadMontage)
@@ -721,6 +729,45 @@ void AShooterCharacter::InterpCapsuleHeight(float DeltaTime)
 	GetCapsuleComponent()->SetCapsuleHalfHeight(InterpHalfHeight);
 }
 
+void AShooterCharacter::Aim()
+{
+	bAiming = true;
+	GetCharacterMovement()->MaxWalkSpeed = CrouchMoveSpeed;
+}
+
+void AShooterCharacter::StopAiming()
+{
+	bAiming = false;
+	if (!bCrouching)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
+	}
+}
+
+void AShooterCharacter::PickupAmmo(AAmmo* Ammo)
+{
+	//check to see if AmmoMap contains Ammo's AmmoType
+	if (AmmoMap.Find(Ammo->GetAmmoType()))
+	{
+		//Get amount of ammo in our AmmoMap for Ammo's Type
+		int32 AmmoCount{ AmmoMap[Ammo->GetAmmoType()] };
+		AmmoCount += Ammo->GetItemCount();
+		//Set the amount of ammo in the Map for this type
+		AmmoMap[Ammo->GetAmmoType()] = AmmoCount;
+	}
+
+	if (EquippedWeapon->GetAmmoType() == Ammo->GetAmmoType())
+	{
+		//Check to see if the gun is empty
+		if (EquippedWeapon->GetAmmo() == 0)
+		{
+			ReloadWeapon();
+		}
+	}
+
+	Ammo->Destroy();
+}
+
 // Called every frame
 void AShooterCharacter::Tick(float DeltaTime)
 {
@@ -782,6 +829,10 @@ void AShooterCharacter::FinishReloading()
 	//Update the Combat State
 	CombatState = ECombatState::ECS_Unoccupied;
 
+	if (bAimingButtonPressed)
+	{
+		Aim();
+	}
 	if (EquippedWeapon == nullptr) return;
 
 	const auto AmmoType{ EquippedWeapon->GetAmmoType() };
@@ -851,5 +902,11 @@ void AShooterCharacter::GetPickupItem(AItem* Item)
 	{
 		SwapWeapon(Weapon);
 		
+	}
+	
+	auto Ammo = Cast<AAmmo>(Item);
+	if (Ammo)
+	{
+		PickupAmmo(Ammo);
 	}
 }

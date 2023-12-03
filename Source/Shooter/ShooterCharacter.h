@@ -142,6 +142,11 @@ protected:
 	/** Interps capsule half height when crouching/standing */
 	void InterpCapsuleHeight(float DeltaTime);
 
+	void Aim();
+	void StopAiming();
+
+	void PickupAmmo(class AAmmo* Ammo);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -199,7 +204,6 @@ private:
 	//��׼��ʱ�����������̧ͷ�ʵı�������
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseAimingLookUpRate;
-
 
 	
 	/** ���ǹ��*/
@@ -368,6 +372,9 @@ private:
 	/** Ground friction while crouching */
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category=Movement, meta = (AllowPrivateAccess = "true"));
 	float CrouchingGroundFriction;
+
+	/** Used for knowing when the aiming button is pressed */
+	bool bAimingButtonPressed;
 
 public:
 	/** Return CameraBoom Subobject */
