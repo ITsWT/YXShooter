@@ -143,6 +143,8 @@ void AShooterCharacter::BeginPlay()
 	}
 	//Spawn the default weapon and equip it
 	EquipWeapon(SpawnDefaultWeapon());
+	EquippedWeapon->DisableCustomDepth();
+	EquippedWeapon->DisableGlowMaterial();
 
 	InitializeAmmoMap();
 	GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
@@ -486,33 +488,37 @@ void AShooterCharacter::TraceForItems()
 			TraceHitItem = Cast<AItem>(ItemTraceResult.Actor);
 			if (TraceHitItem && TraceHitItem->GetPickupWidget())
 			{
+				//Show Item's pickup widget
 				TraceHitItem->GetPickupWidget()->SetVisibility(true);
+				TraceHitItem->EnableCustomDepth();
 			}
-			//��һ֡��⵽��AItem
+			//we hid an item last frame
 			if(TraceHitItemLastFrame)
 			{
 				if (TraceHitItem != TraceHitItemLastFrame)
 				{
-					//��⵽��һ֡��HitItem����һ֡�Ĳ�ͬ
-					//����HitItem�ǿյ�
-					TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);					
+					//we are hitting a different AItem this frame form last frame
+					//Or AItem is null
+					TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+					TraceHitItemLastFrame->DisableCustomDepth();
 				}
 			}
-			//�����崢�浽 TraceHitItemLastFrame ��
+			//Store a reference to HitItem for next frame
 			TraceHitItemLastFrame = TraceHitItem;
 		}
 	}
 	else if (TraceHitItemLastFrame)
 	{
-		//�����ص���������һ֡Ӧ�ùر���ʾui
+		//No longer overlapping any items,Item last frame should not show widget
 		TraceHitItemLastFrame->GetPickupWidget()->SetVisibility(false);
+		TraceHitItemLastFrame->DisableCustomDepth();
 		
 	}
 }
 
 AWeapon* AShooterCharacter::SpawnDefaultWeapon()
 {
-	//���TSubclassOf ����
+	//check the TSubclassof Variable
 	if (DefaultWeaponClass)
 	{
 		//Spawn the weapon
