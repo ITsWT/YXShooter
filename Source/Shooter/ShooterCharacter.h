@@ -10,9 +10,10 @@
 UENUM(BlueprintType)
 enum class ECombatState : uint8
 {
-	ECS_Unoccupied UMETA(DisplayName = "9mm"),
+	ECS_Unoccupied UMETA(DisplayName = "9mm"),//Unoccupied 未占用
 	ECS_FireTimerInProgress UMETA(DisplayName="FireTimerInProgress"),
 	ECS_Reloading UMETA(DisplayName="Reloading"),
+	ECS_Equipping UMETA(DisplayName="Equipping"),
 	ECS_NAX UMETA(DisplayName = "DEfaultMAX")
 };
 
@@ -31,6 +32,7 @@ struct FInterpLocation
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEquipItemDelegate, int32, CurrentSlotIndex, int32, NewSlotIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHightlightIconDelegate, int32, SlotIndex, bool, bStartAnimation);
 
 UCLASS()
 class SHOOTER_API AShooterCharacter : public ACharacter
@@ -114,7 +116,7 @@ protected:
 	class AWeapon* SpawnDefaultWeapon();
 
 	/** Takes a weapon and attaches it to the mesh*/
-	void EquipWeapon(AWeapon* WeaponToEquip);
+	void EquipWeapon(AWeapon* WeaponToEquip, bool bSwapping = false);
 
 	/** Detach weapon and let it fall to the ground*/
 	void DropWeapon();
@@ -173,6 +175,11 @@ protected:
 	void FiveKeyPressed();
 
 	void ExchangeInventoryItems(int32 CurrentItemIndex, int32 NewItemIndex);
+	
+	int32 GetEmptyInventorySlot();
+
+	void HighlightInventorySlot();
+
 
 public:	
 	// Called every frame
@@ -358,8 +365,15 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	UAnimMontage* ReloadMontage;
 
+	/** Montage for Equip animations */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
+	UAnimMontage* EquipMontage;
+
 	UFUNCTION(BlueprintCallable)
 	void FinishReloading();
+
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
 
 	/** Transform of the clip when we first grab the clip during reloading */
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"));
@@ -454,6 +468,14 @@ private:
 	UPROPERTY(BlueprintAssignable, Category = Delegates, meta = (AllowPrivateAccess = "true"));
 	FEquipItemDelegate EquipItemDelegate;
 
+	/** Delegate for sending slot information to InventoryBar when Highlight */
+	UPROPERTY(BlueprintAssignable, Category = Delegates, meta = (AllowPrivateAccess = "true"));
+	FHightlightIconDelegate HighlightIconDelegate;
+
+	/** the index for the currently highlighted slot */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"));
+	int32 HighlightedSlot;
+
 public:
 	/** Return CameraBoom Subobject */
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -490,4 +512,5 @@ public:
 	void StartPickupSoundTimer();
 	void StartEquipSoundTimer();
 
+	void UnHighlightInventorySlot();
 };
