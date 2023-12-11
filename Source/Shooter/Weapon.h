@@ -6,16 +6,9 @@
 #include "Item.h"
 #include "AmmoType.h"
 #include "Engine/DataTable.h"
+#include "WeaponType.h"
 #include "Weapon.generated.h"
 
-UENUM(BlueprintType)
-enum class EWeaponType:uint8
-{
-	EWT_SubMechineGun UMETA(DisplayName="SubmachineGun"),
-	EWT_AssaultRifle UMETA(DisplayName="AssaultRifle"),
-
-	EWT_MAX UMETA(DisplayName="DafaultMAX")
-};
 
 USTRUCT(BlueprintType)
 struct FWeaponDataTable : public FTableRowBase
@@ -49,6 +42,11 @@ struct FWeaponDataTable : public FTableRowBase
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UTexture2D* AmmoIcon;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UMaterialInstance* MaterialInstance;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int32 MaterialIndex;
 };
 
 /**
@@ -106,6 +104,8 @@ private:
 	/** DataTable for weapon properties */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
 	UDataTable* WeaponDataTable;
+
+	int32 PreviousMaterialIndex;
 
 public:
 	/** Add an impulse to the Weapon */

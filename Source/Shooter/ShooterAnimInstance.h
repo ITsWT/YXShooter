@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "WeaponType.h"
 #include "ShooterAnimInstance.generated.h"
 
 
@@ -123,4 +124,8 @@ private:
 	/** Turn when turning in place */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Crouch, meta = (AllowPrivateAccess = "true"));
 	bool bTurningInplace;
+
+	/** Weapon Type for the currently equipped weapon */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Crouch, meta = (AllowPrivateAccess = "true"));
+	EWeaponType EquippedWeaponType;
 };
