@@ -47,6 +47,13 @@ struct FWeaponDataTable : public FTableRowBase
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int32 MaterialIndex;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FName ClipBoneName;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FName ReloadMontageSection;
+
 };
 
 /**
@@ -121,6 +128,8 @@ public:
 	FORCEINLINE EAmmoType GetAmmoType() const { return AmmoType; }
 	FORCEINLINE FName GetReloadMontageSection() const { return ReloadMontageSection; }
 	FORCEINLINE FName GetClipBoneName() const { return ClipBoneName; }
+	FORCEINLINE void SetClipBoneName(FName Name) { ClipBoneName = Name; }
+	FORCEINLINE void SetReloadMontageSection(FName Name) { ReloadMontageSection = Name; }
 
 	void ReloadAmmo(int32 Amount);
 

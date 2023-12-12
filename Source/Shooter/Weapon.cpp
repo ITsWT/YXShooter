@@ -63,7 +63,7 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	const FString WeaponTablePath(TEXT("DataTable'/Game/_Game/DataTable/WeaponData.WeaponData'"));
+	const FString WeaponTablePath(TEXT("DataTable'/Game/_Game/DataTable/WeaponDataTable.WeaponDataTable'"));
 	UDataTable* WeaponTableObject = Cast<UDataTable>(StaticLoadObject(UDataTable::StaticClass(), nullptr, *WeaponTablePath));
 	
 	if (WeaponTableObject)
@@ -94,6 +94,8 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 			PreviousMaterialIndex = GetMaterialIndex();
 			GetItemMesh()->SetMaterial(PreviousMaterialIndex, nullptr);
 			SetMaterialIndex(WeaponDateRow->MaterialIndex);
+			SetClipBoneName(WeaponDateRow->ClipBoneName);
+			SetReloadMontageSection(WeaponDateRow->ReloadMontageSection);
 		}
 
 		if (GetMaterialInstance())
