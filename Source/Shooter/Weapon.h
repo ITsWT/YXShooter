@@ -54,6 +54,32 @@ struct FWeaponDataTable : public FTableRowBase
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FName ReloadMontageSection;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<UAnimInstance> AnimBp;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UTexture2D* CrossHairsMiddle;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UTexture2D* CrossHairsLeft;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UTexture2D* CrossHairsRight;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UTexture2D* CrossHairsButtom;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UTexture2D* CrossHairsTop;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float AutoFireRate;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UParticleSystem* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	USoundCue* FireSound;
 };
 
 /**
@@ -114,6 +140,34 @@ private:
 
 	int32 PreviousMaterialIndex;
 
+	/** Texture for the weapon crosshairs */
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	UTexture2D* CrossHairsMiddle;
+	
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	UTexture2D* CrossHairsLeft;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	UTexture2D* CrossHairsRight;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	UTexture2D* CrossHairsButtom;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	UTexture2D* CrossHairsTop;
+
+	/** The speed at which automatic fire happens */
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	float AutoFireRate;
+
+	/** Particle system spawned at the BarrelSorket */
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	class UParticleSystem* MuzzleFlash;
+
+	/** Sound Played when the weapon is fired */
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category = DataTable, meta = (AllowPrivateAccess = "true"));
+	USoundCue* FireSound;
+
 public:
 	/** Add an impulse to the Weapon */
 	void ThrowWeapon();
@@ -130,6 +184,9 @@ public:
 	FORCEINLINE FName GetClipBoneName() const { return ClipBoneName; }
 	FORCEINLINE void SetClipBoneName(FName Name) { ClipBoneName = Name; }
 	FORCEINLINE void SetReloadMontageSection(FName Name) { ReloadMontageSection = Name; }
+	FORCEINLINE float GetAutoFireRate() const { return AutoFireRate; }
+	FORCEINLINE UParticleSystem* GetMuzzleFlash() const { return MuzzleFlash; }
+	FORCEINLINE USoundCue* GetFireSound() const { return FireSound; }
 
 	void ReloadAmmo(int32 Amount);
 

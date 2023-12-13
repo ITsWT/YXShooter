@@ -239,15 +239,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"), meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
 	float MouseAimingLookUpRate;
 
-	
-	/** ���ǹ��*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
-	class USoundCue* FireSound;
-
-	/** Flash spawned at BarralSocket*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
-	class UParticleSystem* MuzzleFlash;
-
 	/** Montage for firing the weapon*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Combat, meta = (AllowPrivateAccess = "true"));
 	class UAnimMontage* HipFireMontage;
@@ -303,22 +294,19 @@ private:
 	bool bFiringBullet;
 	FTimerHandle CrosshairShootTimer;
 
-	/** ������»����ֱ��ұߴ���������*/
+	/** Left mouse button or right console trigger pressed */
 	bool bFireButtonPressed;
 
-	/** �ܿ���ʱΪ�棬�ȴ�����ʱΪ��*/
+	/** True when we can fire, False when waiting for the timer */
 	bool bShouldFire;
 
-	/** �Զ���������*/
-	float AutomaticFireRate;
-
-	/** ���ÿ������ʱ��*/
+	/** Sets a timer between gunshots */
 	FTimerHandle AutoFireTimer;
 
-	/** Ӧ�ü��ʱΪ��*/
+	/** True if we should trace every frame for items */
 	bool bShoulTraceForItems;
 
-	/** �ص����������*/
+	/** Number of overlapped AItems */
 	int8 OverlappedItemCount;
 
 	/** ��һ֡��⵽������*/

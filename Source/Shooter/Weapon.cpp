@@ -96,6 +96,15 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 			SetMaterialIndex(WeaponDateRow->MaterialIndex);
 			SetClipBoneName(WeaponDateRow->ClipBoneName);
 			SetReloadMontageSection(WeaponDateRow->ReloadMontageSection);
+			GetItemMesh()->SetAnimClass(WeaponDateRow->AnimBp);
+			CrossHairsMiddle = WeaponDateRow->CrossHairsMiddle;
+			CrossHairsLeft = WeaponDateRow->CrossHairsLeft;
+			CrossHairsRight = WeaponDateRow->CrossHairsRight;
+			CrossHairsTop = WeaponDateRow->CrossHairsTop;
+			CrossHairsButtom = WeaponDateRow->CrossHairsButtom;
+			AutoFireRate = WeaponDateRow->AutoFireRate;
+			MuzzleFlash = WeaponDateRow->MuzzleFlash;
+			FireSound = WeaponDateRow->FireSound;
 		}
 
 		if (GetMaterialInstance())
