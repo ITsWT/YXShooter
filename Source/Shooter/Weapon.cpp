@@ -77,6 +77,9 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 		case EWeaponType::EWT_AssaultRifle:
 			WeaponDateRow = WeaponTableObject->FindRow<FWeaponDataTable>(FName(TEXT("AssaultRifle")), TEXT(""));
 			break;
+		case EWeaponType::EWT_Pistol:
+			WeaponDateRow = WeaponTableObject->FindRow<FWeaponDataTable>(FName(TEXT("Pistol")), TEXT(""));
+			break;
 		}
 		if (WeaponDateRow)
 		{
@@ -105,6 +108,7 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 			AutoFireRate = WeaponDateRow->AutoFireRate;
 			MuzzleFlash = WeaponDateRow->MuzzleFlash;
 			FireSound = WeaponDateRow->FireSound;
+			BoneToHide = WeaponDateRow->BoneToHide;
 		}
 
 		if (GetMaterialInstance())
@@ -115,6 +119,15 @@ void AWeapon::OnConstruction(const FTransform& Transform)
 
 			EnableGlowMaterial();
 		}
+	}
+}
+
+void AWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	if (BoneToHide != FName(""))
+	{
+		GetItemMesh()->HideBoneByName(BoneToHide, EPhysBodyOp::PBO_None);
 	}
 }
 
